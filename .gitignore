@@ -1,0 +1,16 @@
+/.gradle
+/.idea
+/build
+/modules
+/bundles
+/deps
+/.github
+*.iml
+*.hprof
+*.log
+.editorconfig
+korge.keystore
+local.properties
+.DS_Store
+testJs.sh
+gradlew.bat
