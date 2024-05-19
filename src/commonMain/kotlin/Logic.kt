@@ -63,7 +63,7 @@ class Stack (){
 
 class Hand (stack: Stack, desk: Desk) {
     val cards: MutableList<Card> = mutableListOf()
-    init { //я просто хз как это через init прописать
+    init {
         for (count in 0..8) {
             cards.add(stack.getCard(desk)) //Берет карту с колоды
         }
@@ -82,8 +82,9 @@ class Hand (stack: Stack, desk: Desk) {
 class Player (stack: Stack, desk: Desk) {
     val hand: Hand = Hand(stack, desk)
 
-    fun check (inx: Int, desk: Desk, bot_skipped: Boolean): Boolean {
-        if (hand.cards[inx].number == -1) return true
+    fun check (inx: Int, desk: Desk, bot_skipped: Boolean, gettedCard: Boolean): Boolean {
+        if (inx == -1) return true
+        if (inx == -2) return !gettedCard
         if (desk.getCard().number == 10 && !(bot_skipped)) if (hand.cards[inx].number != 10) return false
         if (desk.getCard().number == 11 && !(bot_skipped)) if (hand.cards[inx].number != 11) return false
         return desk.getCard().checkRight(hand.cards[inx])
@@ -173,6 +174,7 @@ class Game () {
     val desk: Desk = Desk()
     val player: Player
     val bot: Bot
+    var plr_taked_card: Boolean = false
     lateinit var bot_move: Pair<Card, Int>
 
     init {
@@ -186,17 +188,16 @@ class Game () {
     }
 
     fun round(plrmove: Int) {
-        if (player.check(plrmove, desk, bot_move.second == 0)) {
-            if (player.hand.cards[plrmove].number == -1)  {
+        if (player.check(plrmove, desk, bot_move.second == 0, plr_taked_card)) {
+            if (plrmove == -1)  {
                 if (bot_move.second != 0)  {
                     if (desk.getCard().number == 10) player.take(3, stack, desk)
                 }
             }
-            else {
+            else if (plrmove != -2) {
                 player.move(plrmove, desk)
+                bot_move = bot.makeRound(stack, desk)
             }
-            bot_move = bot.makeRound(stack, desk)
         }
-
     }
 }
