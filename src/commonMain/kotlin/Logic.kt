@@ -1,11 +1,26 @@
 import kotlin.random.Random
 
+class Card (color: String, number: Int) {
+    private val color: String = color
+    private val number: Int = number
+}
+
 // класс Desk который хранит карты которые на столе а так же проверяет полученные карты
 
 class Desk () {
     private val cards: MutableList<Int> = mutableListOf()
 
-    fun getDeskstack
+    fun getDeskstack () {
+        return cards
+    }
+
+    fun getCard () {
+        return cards[cards.size - 1]
+    }
+
+    fun addCard (card: Int) {
+
+    }
 
 }
 
@@ -26,17 +41,18 @@ class Stack (){
             return cards.removeLast()
         }
         else {
-            cards = desk.getDeskstack().shuffle() // <- взять карты выброшенные на стол и перемешать
+            cards.clear()
+            cards.addAll(0, desk.getDeskstack().shuffle()) // <- взять карты выброшенные на стол и перемешать
             return cards.removeLast()
         }
     }
 }
 
-class Hand () {
+class Hand (stack: Stack, desk: Desk) {
     private val cards: MutableList<Int> = mutableListOf()
-    fun initial(stack: Stack) { //я просто хз как это через init прописать
+    init { //я просто хз как это через init прописать
         for (count in 0..8) {
-            cards.add(stack.getCard()) //Берет карту с колоды
+            cards.add(stack.getCard(desk)) //Берет карту с колоды
         }
     }
 
