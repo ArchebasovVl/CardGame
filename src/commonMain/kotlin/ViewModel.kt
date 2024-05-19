@@ -15,16 +15,24 @@ class ViewModel {
         _botHandFlow.emit(botCardCount)
     }
 
-    fun putCard(index: Int){
-        gameProcess.round(index)
+    suspend fun putCard(index: Int){
+        val response: Triple<Card, MutableList<Card>, Int>
+        response = gameProcess.round(index)
+        emitAll(response.first, response.second, response.third)
     }
 
-    fun skipRound(){
-        gameProcess.round(-1)
+    suspend fun skipRound(){
+        val response: Triple<Card, MutableList<Card>, Int>
+        response = gameProcess.round(-1)
+        emitAll(response.first, response.second, response.third)
     }
 
-    fun getCard(){
-        gameProcess.playertakes(1)
-        gameProcess.round(-2)
+    suspend fun getCard(){
+        val response1: MutableList<Card>
+        val response2: Triple<Card, MutableList<Card>, Int>
+        response1 = gameProcess.playertakes(1)
+        _handFlow.emit(response1)
+        response2 = gameProcess.round(-2)
+        emitAll(response2.first, response2.second, response2.third)
     }
 }

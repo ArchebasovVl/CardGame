@@ -183,11 +183,12 @@ class Game () {
         player = Player(stack, desk)
     }
 
-    fun playertakes(cnt: Int) {
+    fun playertakes(cnt: Int): MutableList<Card> {
         player.take(cnt, stack, desk)
+        return player.hand.cards
     }
 
-    fun round(plrmove: Int) {
+    fun round(plrmove: Int): Triple<Card, MutableList<Card>, Int> {
         if (player.check(plrmove, desk, bot_move.second == 0, plr_taked_card)) {
             if (plrmove == -1)  {
                 if (bot_move.second != 0)  {
@@ -199,5 +200,6 @@ class Game () {
                 bot_move = bot.makeRound(stack, desk)
             }
         }
+        return Triple(desk.getCard(), player.hand.cards, bot.hand.cards.size)
     }
 }
