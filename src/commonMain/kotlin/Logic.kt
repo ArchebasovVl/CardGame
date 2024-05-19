@@ -23,15 +23,11 @@ class Stack (){
 
     fun getCard(desk: Desk): Int {
         if (cards.size!= 0) {
-            val getting = cards[cards.size - 1]
-            cards.removeLast()
-            return getting
+            return cards.removeLast()
         }
         else {
             cards = desk.getDeskstack().shuffle() // <- взять карты выброшенные на стол и перемешать
-            val getting = cards[cards.size - 1]
-            cards.removeLast()
-            return getting
+            return cards.removeLast()
         }
     }
 }
