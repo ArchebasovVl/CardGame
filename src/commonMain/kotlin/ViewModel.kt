@@ -1,6 +1,7 @@
 import kotlinx.coroutines.flow.*
 
 class ViewModel {
+    private val gameProcess = Game()
     private val _deskTopFlow = MutableSharedFlow<Card>()
     private val _handFlow = MutableSharedFlow<MutableList<Card>>()
     private val _botHandFlow = MutableSharedFlow<Int>()
@@ -12,5 +13,18 @@ class ViewModel {
         _deskTopFlow.emit(deskTopCard)
         _handFlow.emit(handCards)
         _botHandFlow.emit(botCardCount)
+    }
+
+    fun putCard(index: Int){
+        gameProcess.round(index)
+    }
+
+    fun skipRound(){
+        gameProcess.round(-1)
+    }
+
+    fun getCard(){
+        gameProcess.playertakes(1)
+        gameProcess.round(-2)
     }
 }
