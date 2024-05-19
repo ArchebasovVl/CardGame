@@ -18,3 +18,12 @@ dependencies {
     add("commonMainApi", project(":deps"))
 }
 
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+            }
+        }
+    }
+}
