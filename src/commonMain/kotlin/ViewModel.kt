@@ -9,30 +9,26 @@ class ViewModel {
     val handFlow: SharedFlow<MutableList<Card>> get() = _handFlow
     val botHandFlow: SharedFlow<Int> get() = _botHandFlow
 
-    suspend fun emitAll(deskTopCard: Card, handCards: MutableList<Card>, botCardCount: Int) {
+    private suspend fun emitAll(deskTopCard: Card, handCards: MutableList<Card>, botCardCount: Int) {
         _deskTopFlow.emit(deskTopCard)
         _handFlow.emit(handCards)
         _botHandFlow.emit(botCardCount)
     }
 
-    suspend fun putCard(index: Int){
-        val response: Triple<Card, MutableList<Card>, Int>
-        response = gameProcess.round(index)
+    suspend fun putCard(index: Int) {
+        val response: Triple<Card, MutableList<Card>, Int> = gameProcess.round(index)
         emitAll(response.first, response.second, response.third)
     }
 
-    suspend fun skipRound(){
-        val response: Triple<Card, MutableList<Card>, Int>
-        response = gameProcess.round(-1)
+    suspend fun skipRound() {
+        val response: Triple<Card, MutableList<Card>, Int> = gameProcess.round(-1)
         emitAll(response.first, response.second, response.third)
     }
 
-    suspend fun getCard(){
-        val response1: MutableList<Card>
-        val response2: Triple<Card, MutableList<Card>, Int>
-        response1 = gameProcess.playertakes(1)
+    suspend fun getCard() {
+        val response1: MutableList<Card> = gameProcess.playertakes(1)
         _handFlow.emit(response1)
-        response2 = gameProcess.round(-2)
+        val response2: Triple<Card, MutableList<Card>, Int> = gameProcess.round(-2)
         emitAll(response2.first, response2.second, response2.third)
     }
 }
