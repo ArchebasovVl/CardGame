@@ -37,7 +37,7 @@ class Stack (){
     val cards: MutableList<Card> = mutableListOf()
     init {
         for (color in  listOf("Blue", "Green", "Pink", "Yellow")) {
-            for (number in 0..12) {
+            for (number in 0..11) {
                 if (number != 12) {
                     cards.add(Card(color, number))
                     cards.add(Card(color, number))
@@ -191,13 +191,19 @@ class Game () {
     fun round(plrmove: Int): Triple<Card, MutableList<Card>, Int> {
         if (player.check(plrmove, desk, bot_move.second == 0, plr_taked_card)) {
             if (plrmove == -1)  {
+                plr_taked_card = false
                 if (bot_move.second != 0)  {
                     if (desk.getCard().number == 10) player.take(3, stack, desk)
                 }
             }
             else if (plrmove != -2) {
+                plr_taked_card = false
                 player.move(plrmove, desk)
                 bot_move = bot.makeRound(stack, desk)
+
+            }
+            else {
+                plr_taked_card = true
             }
         }
         return Triple(desk.getCard(), player.hand.cards, bot.hand.cards.size)
