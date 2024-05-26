@@ -1,4 +1,4 @@
-class Card (val color: String, val number: Int) {
+class Card (val color: String, val number: Int?) {
     fun checkRight (card: Card): Boolean {
         if (card.color == color) return true
         else if (card.number == number) return true
@@ -173,7 +173,7 @@ class Game {
     private var botMove: Pair<Card, Int> = Pair(Card("Black", 11), 0)
     init {
         desk.addCard(stack.getCard(desk))
-        while (desk.getCard().number > 9) desk.addCard(stack.getCard(desk))
+        while (desk.getCard().number!! > 9) desk.addCard(stack.getCard(desk))
         bot = Bot(stack, desk)
         player = Player(stack, desk)
         println("Инициализация игры:/n/tСтол: " + desk.getCard().number.toString() + " " + desk.getCard().color + "/n/tРука бота: " + bot.hand.toString() + "/n/tРука игрока: " + player.hand.toString())

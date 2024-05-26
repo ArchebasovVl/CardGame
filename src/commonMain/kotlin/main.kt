@@ -20,5 +20,10 @@ suspend fun main() = Korge(
             deskScene.hand.centerXOnStage()
         }
     }
+    launch {
+        viewModel.deskTopFlow.collect { card ->
+            deskScene.deskTop.changeCard(card)
+        }
+    }
 }
 
