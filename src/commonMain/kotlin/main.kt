@@ -1,10 +1,9 @@
 import korlibs.image.color.*
-import korlibs.image.format.*
 import korlibs.korge.*
 import korlibs.korge.scene.*
-import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.math.geom.*
+import kotlinx.coroutines.*
 
 suspend fun main() = Korge(
     windowSize = Size(512, 512),
@@ -12,6 +11,14 @@ suspend fun main() = Korge(
 {
     val viewModel = ViewModel()
 	val sceneContainer = sceneContainer()
-	sceneContainer.changeTo { DeskScene() }
+    val deskScene = DeskScene()
+	sceneContainer.changeTo { deskScene }
+
+    launch {
+        viewModel.handFlow.collect { hand ->
+            deskScene.hand.update(hand)
+            deskScene.hand.centerXOnStage()
+        }
+    }
 }
 

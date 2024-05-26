@@ -7,16 +7,23 @@ import korlibs.io.file.std.resourcesVfs
 
 
 class DeskScene : Scene() {
+    lateinit var hand: HandContainer
+
     override suspend fun SContainer.sceneMain() {
         val colorToBitmap = mapOf(
-            "back" to resourcesVfs["cardBack.png"].readBitmap(),
-            "blue" to resourcesVfs["cardBGb.png"].readBitmap(),
-            "green" to resourcesVfs["cardBGg.png"].readBitmap(),
-            "pink" to resourcesVfs["cardBGp.png"].readBitmap(),
-            "yellow" to resourcesVfs["cardBGy.png"].readBitmap()
+            "Back" to resourcesVfs["cardBack.png"].readBitmap(),
+            "Blue" to resourcesVfs["cardBGb.png"].readBitmap(),
+            "Green" to resourcesVfs["cardBGg.png"].readBitmap(),
+            "Pink" to resourcesVfs["cardBGp.png"].readBitmap(),
+            "Yellow" to resourcesVfs["cardBGy.png"].readBitmap()
             )
 
-        val deskTop = CardContainer(2, colorToBitmap["back"]!!)
+        hand = HandContainer(colorToBitmap)
+        hand.centerXOnStage()
+        hand.alignBottomToBottomOf(this)
+        addChild(hand)
+
+        val deskTop = CardContainer(2, colorToBitmap["Yellow"]!!)
         deskTop.centerOn(this)
         addChild(deskTop)
     }
