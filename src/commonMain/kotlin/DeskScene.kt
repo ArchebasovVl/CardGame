@@ -4,11 +4,13 @@ import korlibs.korge.scene.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.io.file.std.resourcesVfs
+import kotlinx.coroutines.*
 
 
 class DeskScene : Scene() {
-    lateinit var hand: HandContainer
-    lateinit var deskTop: CardContainer
+    private val viewModel = ViewModel()
+    private lateinit var hand: HandContainer
+    private lateinit var deskTop: CardContainer
 
     override suspend fun SContainer.sceneMain() {
         val colorToBitmap = mapOf(
@@ -27,6 +29,18 @@ class DeskScene : Scene() {
         deskTop = CardContainer(null, colorToBitmap)
         deskTop.centerOn(this)
         addChild(deskTop)
+
+        launch {
+            viewModel.handFlow.collect {
+                hand.update(it)
+                hand.centerXOnStage()
+            }
+        }
+        launch {
+            viewModel.deskTopFlow.collect {
+                deskTop.changeCard(it)
+            }
+        }
     }
 }
 
@@ -43,7 +57,7 @@ class CardContainer(
         txtTop.alignTopToTopOf(this, padding = 8)
         txtTop.alignLeftToLeftOf(this, padding = 14)
         txtBottom.alignBottomToBottomOf(this, padding = 8)
-        txtBottom.alignRightToRightOf(this, padding = 11)
+        txtBottom.alignRightToRightOf(this, padding = 20)
         addChild(img)
         addChild(txtBottom)
         addChild(txtTop)
@@ -53,7 +67,6 @@ class CardContainer(
     }
 
     fun changeCard(card: Card) {
-        print("Card is ${card.number} ")
         img = image(cardImages[card.color]!!) { scale = 0.04 }
         txtTop.setText(card.number.toString())
         txtBottom.setText(card.number.toString())
