@@ -8,6 +8,9 @@ import korlibs.korge.scene.*
 import korlibs.korge.view.*
 import korlibs.korge.view.align.*
 import korlibs.io.file.std.resourcesVfs
+import korlibs.korge.input.*
+import korlibs.korge.ui.*
+import korlibs.math.geom.*
 import kotlinx.coroutines.*
 
 
@@ -26,8 +29,21 @@ class DeskScene : Scene() {
             "Yellow" to resourcesVfs["cardBGy.png"].readBitmap()
         )
 
+        val skipButton = uiButton()
+        skipButton.text = "Skip"
+        skipButton.size = Size(60, 40)
+        skipButton.alignRightToRightOf(this)
+        skipButton.alignTopToTopOf(this, 100)
+        skipButton.onPress{ launch { viewModel.skipRound() } }
+
+        val deck = CardContainer(null, colorToBitmap)
+        deck.alignRightToRightOf(this)
+        deck.centerYOn(this)
+        deck.onUp{ launch { viewModel.getCard() } }
+        addChild(deck)
+
         hand = HandContainer(colorToBitmap, viewModel)
-        hand.centerXOnStage()
+        hand.alignTopToTopOf(this, 150)
         hand.alignBottomToBottomOf(this, padding = -50)
         addChild(hand)
 
