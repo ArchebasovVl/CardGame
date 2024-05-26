@@ -1,8 +1,8 @@
 //import kotlin.random.Random
 //
 class Card (color: String, number: Int) {
-    private val color: String = color
-    private val number: Int = number
+    val color: String = color
+    val number: Int = number
 }
 //
 //// класс Desk который хранит карты которые на столе а так же проверяет полученные карты

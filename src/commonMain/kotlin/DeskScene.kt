@@ -8,13 +8,15 @@ import korlibs.io.file.std.resourcesVfs
 
 class DeskScene : Scene() {
     override suspend fun SContainer.sceneMain() {
-        val bitmapBack = resourcesVfs["cardBack.png"].readBitmap()
-        val bitmapBlue = resourcesVfs["cardBGb.png"].readBitmap()
-        val bitmapGreen = resourcesVfs["cardBGg.png"].readBitmap()
-        val bitmapPink = resourcesVfs["cardBGp.png"].readBitmap()
-        val bitmapYellow = resourcesVfs["cardBGy.png"].readBitmap()
+        val colorToBitmap = mapOf(
+            "back" to resourcesVfs["cardBack.png"].readBitmap(),
+            "blue" to resourcesVfs["cardBGb.png"].readBitmap(),
+            "green" to resourcesVfs["cardBGg.png"].readBitmap(),
+            "pink" to resourcesVfs["cardBGp.png"].readBitmap(),
+            "yellow" to resourcesVfs["cardBGy.png"].readBitmap()
+            )
 
-        val deskTop = CardContainer(2, bitmapGreen)
+        val deskTop = CardContainer(2, colorToBitmap["back"]!!)
         deskTop.centerOn(this)
         addChild(deskTop)
     }
@@ -33,5 +35,19 @@ class CardContainer(number: Int, cardBitmap: Bitmap) : Container() {
         addChild(img)
         addChild(txtBottom)
         addChild(txtTop)
+    }
+}
+
+class HandContainer(
+    private val cardImages: Map<String, Bitmap>
+) : Container() {
+    fun update(hand: MutableList<Card>){
+        var padding = 0
+        for (card in hand){
+            val cardContainer = CardContainer(card.number, cardImages[card.color]!!)
+            cardContainer.xy(padding, 0)
+            addChild(cardContainer)
+            padding += 30
+        }
     }
 }
