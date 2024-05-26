@@ -26,7 +26,7 @@ class DeskScene : Scene() {
             "Yellow" to resourcesVfs["cardBGy.png"].readBitmap()
         )
 
-        hand = HandContainer(colorToBitmap)
+        hand = HandContainer(colorToBitmap, viewModel)
         hand.centerXOnStage()
         hand.alignBottomToBottomOf(this, padding = -50)
         addChild(hand)
