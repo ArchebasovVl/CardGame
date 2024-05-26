@@ -23,7 +23,7 @@ class DeskScene : Scene() {
 
         hand = HandContainer(colorToBitmap)
         hand.centerXOnStage()
-        hand.alignBottomToBottomOf(this)
+        hand.alignBottomToBottomOf(this, padding = -50)
         addChild(hand)
 
         deskTop = CardContainer(null, colorToBitmap)
@@ -40,6 +40,9 @@ class DeskScene : Scene() {
             viewModel.deskTopFlow.collect {
                 deskTop.changeCard(it)
             }
+        }
+        launch {
+            viewModel.skipRound()
         }
     }
 }
@@ -79,11 +82,15 @@ class CardContainer(
 class HandContainer(
     private val cardImages: Map<String, Bitmap>
 ) : Container() {
+
+    init { text(" ") }
+
     fun update(hand: MutableList<Card>) {
-        var padding = 0
+        var padding = 10
         for (card in hand) {
             val cardContainer = CardContainer(card, cardImages)
-            cardContainer.xy(padding, 0)
+            cardContainer.alignLeftToLeftOf(this, padding)
+            cardContainer.alignBottomToBottomOf(this)
             addChild(cardContainer)
             padding += 30
         }
