@@ -173,7 +173,8 @@ class Game {
     private lateinit var botMove: Pair<Card, Int>
 
     init {
-//        while (desk.getCard().number > 9) desk.addCard(stack.getCard(desk))
+        desk.addCard(stack.getCard(desk))
+        while (desk.getCard().number > 9) desk.addCard(stack.getCard(desk))
         bot = Bot(stack, desk)
         player = Player(stack, desk)
     }
