@@ -23,25 +23,27 @@ class DeskScene : Scene() {
         hand.alignBottomToBottomOf(this)
         addChild(hand)
 
-        val deskTop = CardContainer(2, colorToBitmap["Yellow"]!!)
+        val deskTop = CardContainer(null, colorToBitmap["Back"]!!)
         deskTop.centerOn(this)
         addChild(deskTop)
     }
 }
 
-class CardContainer(number: Int, cardBitmap: Bitmap) : Container() {
+class CardContainer(number: Int?, cardBitmap: Bitmap) : Container() {
     init {
         val img = image(cardBitmap) { scale = 0.04 }
         img.centerOn(this)
-        val txtTop = text(number.toString())
-        val txtBottom = text(number.toString())
-        txtTop.alignTopToTopOf(this, padding = 8)
-        txtTop.alignLeftToLeftOf(this, padding = 14)
-        txtBottom.alignBottomToBottomOf(this, padding = 8)
-        txtBottom.alignRightToRightOf(this, padding = 11)
+        if (number != null) {
+            val txtTop = text(number.toString())
+            val txtBottom = text(number.toString())
+            txtTop.alignTopToTopOf(this, padding = 8)
+            txtTop.alignLeftToLeftOf(this, padding = 14)
+            txtBottom.alignBottomToBottomOf(this, padding = 8)
+            txtBottom.alignRightToRightOf(this, padding = 11)
+            addChild(txtBottom)
+            addChild(txtTop)
+        }
         addChild(img)
-        addChild(txtBottom)
-        addChild(txtTop)
     }
 }
 
