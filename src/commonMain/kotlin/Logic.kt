@@ -73,14 +73,27 @@ class Hand (stack: Stack, desk: Desk) {
         desk.addCard(cards.removeAt(inx))
     }
 
+    fun ifin(card: Card): Int {
+        for (ind in 0..(cards.size - 1)) if (cards[ind].color == card.color && cards[ind].number == card.number) return ind
+        return -1
+    }
+
 }
 
 class Player (stack: Stack, desk: Desk) {
     val hand: Hand = Hand(stack, desk)
 
     fun check (inx: Int, desk: Desk, botSkipped: Boolean, resCard: Boolean): Boolean {
-        if (inx == -1) return true
-        if (inx == -2) return !resCard
+        if (inx == -1 && desk.getCard().number == 10) return true
+        if (inx == -1 && desk.getCard().number == 11) return true
+        if (inx == -1) return resCard
+        if (inx == -2 && desk.getCard().number == 10) return false
+        if (inx == -2 && desk.getCard().number == 11 && botSkipped) return false
+        if (inx == -2 && desk.getCard().number == 11 && !botSkipped) return true
+        if (inx == -2 && desk.getCard().number == 10 && botSkipped) return false
+        if (inx == -2 && desk.getCard().number == 10 && !botSkipped) return true
+        if (inx == -2 && desk.getCard().number != 10) return !resCard
+        println(desk.getCard().number.toString() + " " + hand.cards[inx].number.toString())
         if (desk.getCard().number == 10 && !(botSkipped)) if (hand.cards[inx].number != 10) return false
         if (desk.getCard().number == 11 && !(botSkipped)) if (hand.cards[inx].number != 11) return false
         return desk.getCard().checkRight(hand.cards[inx])
@@ -91,40 +104,41 @@ class Player (stack: Stack, desk: Desk) {
     }
 
     fun take (cnt: Int, stack: Stack, desk: Desk) {
-        for (i in 0..cnt) hand.takeCard(stack, desk)
+        for (i in 1..cnt) hand.takeCard(stack, desk)
     }
 }
 
 class Bot (stack: Stack, desk: Desk) {
     val hand: Hand = Hand(stack, desk)
-    private fun makeReaction (stack: Stack, desk: Desk): Boolean {
-        if (desk.getCard().number == 10) {
-            if (hand.cards.count {it.number == 10} == 0)
+    private fun makeReaction (stack: Stack, desk: Desk, plrskip: Boolean = false): Boolean {
+        if (desk.getCard().number == 10 && !plrskip) {
+            if (hand.ifin(Card("Pink", 10)) == -1 && hand.ifin(Card("Yellow", 10))  == -1 && hand.ifin(Card("Green", 10))  == -1  && hand.ifin(Card("Blue", 10))  == -1 )
                 hand.takeCard(stack, desk)
-                hand.takeCard(stack, desk)
-                hand.takeCard(stack, desk)
-                return false
+            hand.takeCard(stack, desk)
+            hand.takeCard(stack, desk)
+            return false
         }
-        else if (desk.getCard().number == 11) {
-            if (hand.cards.count {it.number == 10} == 0) return false
+        else if (desk.getCard().number == 11 && !plrskip) {
+            if (hand.ifin(Card("Pink", 11))  == -1 && hand.ifin(Card("Yellow", 11))  == -1 && hand.ifin(Card("Green", 11))  == -1  && hand.ifin(Card("Blue", 11))  == -1) return false
         }
         return true
     }
-    private fun makeMove(desk: Desk): Pair<Card, Int> {
-        if (desk.getCard().number == 10) {
+    private fun makeMove(desk: Desk, plrskip: Boolean = false): Pair<Card, Int> {
+        if (desk.getCard().number == 10 && !plrskip) {
             for (color in  listOf("Blue", "Green", "Pink", "Yellow")) {
                 if (hand.cards.indexOf(Card(color, 10)) != -1) {
-                    hand.makeMove(hand.cards.indexOf(Card(color, 10)), desk)
+                    hand.makeMove(hand.ifin(Card(color, 10)), desk)
                     return Pair(Card(color, 10), 1)
                 }
             }
 
         }
-        else if (desk.getCard().number == 11) {
+        else if (desk.getCard().number == 11 && !plrskip) {
             for (color in  listOf("Blue", "Green", "Pink", "Yellow")) {
-                if (hand.cards.indexOf(Card(color, 11)) != -1) {
-                    hand.makeMove(hand.cards.indexOf(Card(color, 11)), desk)
-                    return Pair(Card(color, 10), 1)
+
+                if (hand.ifin(Card(color, 11)) != -1)  {
+                    hand.makeMove(hand.ifin(Card(color, 11)), desk)
+                    return Pair(Card(color, 11), 1)
                 }
             }
         }
@@ -141,10 +155,10 @@ class Bot (stack: Stack, desk: Desk) {
                     }
                     else {
                         hand.makeMove(hand.cards.indexOf(card), desk)
-                        if (hand.cards.count { it == card } == 2) {
-                            hand.makeMove(hand.cards.indexOf(card), desk)
-                            return Pair(card, 2)
-                        }
+                        //if (hand.cards.count { it == card } == 2) {
+                        //    hand.makeMove(hand.cards.indexOf(card), desk)
+                        //    return Pair(card, 2)
+                        //}
                         return Pair(card, 1)
                     }
 
@@ -153,16 +167,27 @@ class Bot (stack: Stack, desk: Desk) {
         }
         return Pair(Card("", -1), 0)
     }
-    fun makeRound(stack: Stack, desk: Desk): Pair<Card, Int> {
-        if (makeReaction(stack, desk)) {
-            if (makeMove(desk) == Pair(Card("", -1), 0)) {
+    fun makeRound(stack: Stack, desk: Desk, plrskip: Boolean = false): Pair<Card, Int> {
+        var outp = "Руки бота: "
+        for (i in 0..(hand.cards.size-1)) {
+            outp += "[" + hand.cards[i].number.toString() + " " +hand.cards[i].color+ "] "
+        }
+        println(outp)
+        val react: Boolean = makeReaction(stack, desk, plrskip)
+        println(react)
+        var mamo: Pair<Card, Int>
+        if (react) {
+            mamo = makeMove(desk, plrskip)
+
+            if (mamo.first.number == -1 ) {
                 hand.takeCard(stack, desk)
-                return makeMove(desk)
+                mamo = makeMove(desk, plrskip)
             }
+            return mamo
         }
         return Pair(Card("", -1), 0)
-        }
     }
+}
 
 
 class Game {
@@ -177,7 +202,6 @@ class Game {
         while (desk.getCard().number > 9) desk.addCard(stack.getCard(desk))
         bot = Bot(stack, desk)
         player = Player(stack, desk)
-        println("Инициализация игры:/n/tСтол: " + desk.getCard().number.toString() + " " + desk.getCard().color + "/n/tРука бота: " + bot.hand.toString() + "/n/tРука игрока: " + player.hand.toString())
     }
 
     fun playertakes(cnt: Int): MutableList<Card> {
@@ -185,26 +209,36 @@ class Game {
         return player.hand.cards
     }
 
+    fun start(): Triple<Card, MutableList<Card>, Int>  {
+        return Triple(desk.getCard(), player.hand.cards, bot.hand.cards.size)
+    }
+
     fun round(plrmove: Int): Triple<Card, MutableList<Card>, Int> {
         if (player.check(plrmove, desk, botMove.second == 0, plrTakedCard)) {
             if (plrmove == -1)  {
                 plrTakedCard = false
+                println(botMove.first.color)
+                println(botMove.first.number)
                 if (botMove.second != 0)  {
-                    if (desk.getCard().number == 10) player.take(3, stack, desk)
+                    if (desk.getCard().number == 10) playertakes(3)
                 }
+                botMove = bot.makeRound(stack, desk, true)
+                if (bot.hand.cards.size == 0) return Triple(desk.getCard(), player.hand.cards, 100) // Проигрыш игрока
             }
             else if (plrmove != -2) {
                 plrTakedCard = false
                 player.move(plrmove, desk)
+                if (player.hand.cards.size == 0) return Triple(desk.getCard(), player.hand.cards, -100) // Проигрыш бота
                 botMove = bot.makeRound(stack, desk)
+                if (bot.hand.cards.size == 0) return Triple(desk.getCard(), player.hand.cards, 100) // Проигрыш игрока
 
             }
             else {
+                playertakes(1)
                 plrTakedCard = true
             }
         }
-        println("Раунд:/n/tСтол: " + desk.getCard().number.toString() + " " + desk.getCard().color + "/n/tРука бота: " + bot.hand.toString() + "/n/tРука игрока: " + player.hand.toString())
-
+        else println("Неверный ход")
         return Triple(desk.getCard(), player.hand.cards, bot.hand.cards.size)
     }
 }
