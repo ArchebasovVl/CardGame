@@ -26,7 +26,15 @@ class DeskScene : Scene() {
             "Blue" to resourcesVfs["cardBGb.png"].readBitmap(),
             "Green" to resourcesVfs["cardBGg.png"].readBitmap(),
             "Pink" to resourcesVfs["cardBGp.png"].readBitmap(),
-            "Yellow" to resourcesVfs["cardBGy.png"].readBitmap()
+            "Yellow" to resourcesVfs["cardBGy.png"].readBitmap(),
+            "BlueHp" to resourcesVfs["cardBHp.png"].readBitmap(),
+            "BlueSt" to resourcesVfs["cardBSt.png"].readBitmap(),
+            "GreenHp" to resourcesVfs["cardGHp.png"].readBitmap(),
+            "GreenSt" to resourcesVfs["cardGSt.png"].readBitmap(),
+            "PinkHp" to resourcesVfs["cardPHp.png"].readBitmap(),
+            "PinkSt" to resourcesVfs["cardPSt.png"].readBitmap(),
+            "YellowHp" to resourcesVfs["cardYHp.png"].readBitmap(),
+            "YellowSt" to resourcesVfs["cardYSt.png"].readBitmap()
         )
 
         val skipButton = uiButton()

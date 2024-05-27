@@ -30,9 +30,23 @@ open class CardContainer(
     }
 
     fun changeCard(card: Card) {
-        img = image(cardImages[card.color]!!) { scale = 0.04 }
-        txtTop.setText(card.number.toString())
-        txtBottom.setText(card.number.toString())
+        when (card.number){
+            10 -> {
+                img = image(cardImages[card.color + "Hp"]!!) { scale = 0.04 }
+                txtTop.setText("")
+                txtBottom.setText("")
+            }
+            11 -> {
+                img = image(cardImages[card.color + "St"]!!) { scale = 0.04 }
+                txtTop.setText("")
+                txtBottom.setText("")
+            }
+            else -> {
+                img = image(cardImages[card.color]!!) { scale = 0.04 }
+                txtTop.setText(card.number.toString())
+                txtBottom.setText(card.number.toString())
+            }
+        }
         addChild(txtTop)
         addChild(txtBottom)
     }
