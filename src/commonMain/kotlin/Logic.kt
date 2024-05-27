@@ -93,7 +93,7 @@ class Player (stack: Stack, desk: Desk) {
         if (inx == -2 && desk.getCard().number == 10 && botSkipped) return false
         if (inx == -2 && desk.getCard().number == 10 && !botSkipped) return true
         if (inx == -2 && desk.getCard().number != 10) return !resCard
-        println(desk.getCard().number.toString() + " " + hand.cards[inx].number.toString())
+//        println(desk.getCard().number.toString() + " " + hand.cards[inx].number.toString())
         if (desk.getCard().number == 10 && !(botSkipped)) if (hand.cards[inx].number != 10) return false
         if (desk.getCard().number == 11 && !(botSkipped)) if (hand.cards[inx].number != 11) return false
         return desk.getCard().checkRight(hand.cards[inx])
@@ -168,13 +168,13 @@ class Bot (stack: Stack, desk: Desk) {
         return Pair(Card("", -1), 0)
     }
     fun makeRound(stack: Stack, desk: Desk, plrskip: Boolean = false): Pair<Card, Int> {
-        var outp = "Руки бота: "
-        for (i in 0..(hand.cards.size-1)) {
-            outp += "[" + hand.cards[i].number.toString() + " " +hand.cards[i].color+ "] "
-        }
-        println(outp)
+//        var outp = "Руки бота: "
+//        for (i in 0..(hand.cards.size-1)) {
+//            outp += "[" + hand.cards[i].number.toString() + " " +hand.cards[i].color+ "] "
+//        }
+//        println(outp)
         val react: Boolean = makeReaction(stack, desk, plrskip)
-        println(react)
+//        println(react)
         var mamo: Pair<Card, Int>
         if (react) {
             mamo = makeMove(desk, plrskip)
@@ -217,8 +217,8 @@ class Game {
         if (player.check(plrmove, desk, botMove.second == 0, plrTakedCard)) {
             if (plrmove == -1)  {
                 plrTakedCard = false
-                println(botMove.first.color)
-                println(botMove.first.number)
+//                println(botMove.first.color)
+//                println(botMove.first.number)
                 if (botMove.second != 0)  {
                     if (desk.getCard().number == 10) playertakes(3)
                 }
@@ -238,7 +238,8 @@ class Game {
                 plrTakedCard = true
             }
         }
-        else println("Неверный ход")
+//        else println("Неверный ход")
+
         return Triple(desk.getCard(), player.hand.cards, bot.hand.cards.size)
     }
 }

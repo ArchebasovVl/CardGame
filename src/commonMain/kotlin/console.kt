@@ -21,7 +21,3 @@ fun main_c () {
     if (res.third == 100) println("Победа бота")
     else if (res.third == -100) println("Победа игрока")
 }
-
-fun main () {
-    main_c()
-}
