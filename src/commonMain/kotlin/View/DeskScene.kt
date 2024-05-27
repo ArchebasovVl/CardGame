@@ -60,6 +60,11 @@ class DeskScene : Scene() {
             viewModel.handFlow.collect {
                 hand.update(it)
                 hand.centerXOnStage()
+                if (it.size == 0){
+                    val endLabel = text("Поздравляем, вы победили!")
+                    endLabel.centerOnStage()
+                    onClick{ views().gameWindow.exit() }
+                }
             }
         }
         launch {
@@ -71,6 +76,11 @@ class DeskScene : Scene() {
             viewModel.botHandFlow.collect {
                 botHand.update(it)
                 botHand.centerXOnStage()
+                if (it == 0) {
+                    val endLabel = text("Поздравляем, вы проиграли!")
+                    endLabel.centerOnStage()
+                    onClick { views().gameWindow.exit() }
+                }
             }
         }
         launch {
