@@ -59,7 +59,7 @@ class MovableCardContainer(
     index: Int
 ) : CardContainer(card, cardImages) {
     init{
-        onDown {
+        onClick {
             parent.vm.putCard(index)
         }
     }

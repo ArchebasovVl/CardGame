@@ -26,8 +26,6 @@ class ViewModel {
     }
 
     suspend fun getCard() {
-        val response1: MutableList<Card> = gameProcess.playertakes(1)
-        _handFlow.tryEmit(response1)
         val response2: Triple<Card, MutableList<Card>, Int> = gameProcess.round(-2)
         emitAll(response2.first, response2.second, response2.third)
     }

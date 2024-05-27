@@ -1,3 +1,7 @@
+package View
+
+import Card
+import Game
 
 fun main_c () {
     var inp = ""

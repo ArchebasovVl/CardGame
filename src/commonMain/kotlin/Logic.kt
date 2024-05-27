@@ -86,11 +86,10 @@ class Player (stack: Stack, desk: Desk) {
         if (inx == -1 && desk.getCard().number == 10) return true
         if (inx == -1 && desk.getCard().number == 11) return true
         if (inx == -1) return resCard
-        if (inx == -2 && desk.getCard().number == 10) return false
-        if (inx == -2 && desk.getCard().number == 11 && botSkipped) return false
-        if (inx == -2 && desk.getCard().number == 11 && !botSkipped) return true
-        if (inx == -2 && desk.getCard().number == 10 && botSkipped) return false
-        if (inx == -2 && desk.getCard().number == 10 && !botSkipped) return true
+        if (inx == -2 && desk.getCard().number == 11 && !botSkipped) return false
+        if (inx == -2 && desk.getCard().number == 11 && botSkipped) return true
+        if (inx == -2 && desk.getCard().number == 10 && !botSkipped) return false
+        if (inx == -2 && desk.getCard().number == 10 && botSkipped) return true
         if (inx == -2 && desk.getCard().number != 10) return !resCard
 //        println(desk.getCard().number.toString() + " " + hand.cards[inx].number.toString())
         if (desk.getCard().number == 10 && !(botSkipped)) if (hand.cards[inx].number != 10) return false
@@ -213,7 +212,7 @@ class Game {
     }
 
     fun round(plrmove: Int): Triple<Card, MutableList<Card>, Int> {
-        if (player.check(plrmove, desk, botMove.second == 0, plrTakedCard)) {
+        if (player.check(plrmove, desk, botMove.first.number == -1, plrTakedCard)) {
             if (plrmove == -1)  {
                 plrTakedCard = false
 //                println(botMove.first.color)
